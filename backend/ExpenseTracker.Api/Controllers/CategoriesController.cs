@@ -1,9 +1,12 @@
 ﻿using ExpenseTracker.Core.DTOs;
 using ExpenseTracker.Core.Entities;
 using ExpenseTracker.Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ExpenseTracker.Api.Controllers;
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class CategoriesController : ControllerBase
@@ -15,8 +18,7 @@ public class CategoriesController : ControllerBase
         _categoryRepository = categoryRepository;
     }
 
-    // TODO: reemplazar este userId hardcodeado cuando agreguemos JWT auth
-    private const int CurrentUserId = 1;
+    private int CurrentUserId => int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CategoryDto>>> GetAll()

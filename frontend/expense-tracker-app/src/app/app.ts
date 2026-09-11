@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { CardModule } from 'primeng/card';
+import { RouterOutlet } from '@angular/router';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-root',
-  imports: [CardModule],
+  imports: [RouterOutlet, ToastModule, ConfirmDialogModule],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App {
-  protected readonly title = 'Expense Tracker App';
-}
+export class App {}

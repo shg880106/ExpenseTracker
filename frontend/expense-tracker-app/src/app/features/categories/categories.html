@@ -1,0 +1,51 @@
+<div class="page-header">
+  <div>
+    <h1>Categories</h1>
+    <p>Organize your income and expenses into categories.</p>
+  </div>
+  <p-button label="New Category" icon="pi pi-plus" (onClick)="openCreateDialog()" />
+</div>
+
+<p-table
+  [value]="categories()"
+  [loading]="loading()"
+  dataKey="id"
+  styleClass="categories-table"
+  [paginator]="categories().length > 10"
+  [rows]="10"
+>
+  <ng-template #header>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th class="actions-column">Actions</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #body let-category>
+    <tr>
+      <td>{{ category.name }}</td>
+      <td>
+        <p-tag [value]="getCategoryTypeLabel(category.type)" [severity]="getCategoryTypeSeverity(category.type)" />
+      </td>
+      <td class="actions-column">
+        <p-button icon="pi pi-pencil" [text]="true" severity="secondary" (onClick)="openEditDialog(category)" ariaLabel="Edit category" />
+        <p-button icon="pi pi-trash" [text]="true" severity="danger" (onClick)="confirmDelete(category)" ariaLabel="Delete category" />
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template #emptymessage>
+    <tr>
+      <td colspan="3" class="empty-message">No categories yet. Create your first one to get started.</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<app-category-form
+  [visible]="dialogVisible()"
+  [category]="selectedCategory()"
+  [saving]="saving()"
+  (visibleChange)="dialogVisible.set($event)"
+  (save)="onSave($event)"
+/>

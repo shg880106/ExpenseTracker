@@ -1,0 +1,108 @@
+<div class="auth-page">
+  <p-card class="auth-card">
+    <p-header>
+      <div class="auth-header">
+        <h1>Create your account</h1>
+        <p>Start tracking your finances with ExpenseTracker</p>
+      </div>
+    </p-header>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+      @if (errorMessage(); as message) {
+        <p-message severity="error" styleClass="full-width">{{ message }}</p-message>
+      }
+
+      <div class="field">
+        <label for="name">Name</label>
+        <input
+          pInputText
+          id="name"
+          type="text"
+          formControlName="name"
+          placeholder="Jane Doe"
+          class="full-width"
+          autocomplete="name"
+        />
+        @if (form.controls.name.invalid && form.controls.name.touched) {
+          <small class="field-error">Name is required.</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input
+          pInputText
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="you@example.com"
+          class="full-width"
+          autocomplete="email"
+        />
+        @if (form.controls.email.invalid && form.controls.email.touched) {
+          <small class="field-error">
+            @if (form.controls.email.hasError('required')) {
+              Email is required.
+            } @else {
+              Enter a valid email address.
+            }
+          </small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <p-password
+          inputId="password"
+          formControlName="password"
+          [toggleMask]="true"
+          class="full-width"
+          inputStyleClass="full-width"
+          autocomplete="new-password"
+        />
+        @if (form.controls.password.invalid && form.controls.password.touched) {
+          <small class="field-error">
+            @if (form.controls.password.hasError('required')) {
+              Password is required.
+            } @else {
+              Password must be at least 8 characters and include a letter and a number.
+            }
+          </small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="confirmPassword">Confirm password</label>
+        <p-password
+          inputId="confirmPassword"
+          formControlName="confirmPassword"
+          [feedback]="false"
+          [toggleMask]="true"
+          class="full-width"
+          inputStyleClass="full-width"
+          autocomplete="new-password"
+        />
+        @if (form.controls.confirmPassword.invalid && form.controls.confirmPassword.touched) {
+          <small class="field-error">
+            @if (form.controls.confirmPassword.hasError('required')) {
+              Please confirm your password.
+            } @else {
+              Passwords do not match.
+            }
+          </small>
+        }
+      </div>
+
+      <p-button
+        type="submit"
+        label="Create account"
+        styleClass="full-width"
+        [loading]="loading()"
+      />
+    </form>
+
+    <p class="auth-footer">
+      Already have an account? <a routerLink="/login">Sign in</a>
+    </p>
+  </p-card>
+</div>

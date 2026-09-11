@@ -1,0 +1,53 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: var(--p-surface-50);
+}
+
+.app-toolbar {
+  border-radius: 0;
+  border-inline: none;
+  border-top: none;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+
+  a {
+    color: var(--p-text-muted-color);
+    text-decoration: none;
+    font-weight: 500;
+
+    &.active-link {
+      color: var(--p-primary-color);
+    }
+  }
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--p-text-color);
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  .user-name {
+    color: var(--p-text-muted-color);
+    font-size: 0.9rem;
+  }
+}
+
+.app-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}

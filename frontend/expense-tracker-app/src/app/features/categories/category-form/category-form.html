@@ -1,0 +1,49 @@
+<p-dialog
+  [visible]="visible()"
+  (visibleChange)="onVisibleChange($event)"
+  [modal]="true"
+  [header]="isEditMode ? 'Edit Category' : 'New Category'"
+  [style]="{ width: '28rem' }"
+  [closable]="!saving()"
+  [dismissableMask]="!saving()"
+>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="category-form">
+    <div class="field">
+      <label for="category-name">Name</label>
+      <input
+        pInputText
+        id="category-name"
+        type="text"
+        formControlName="name"
+        placeholder="e.g. Groceries"
+        class="full-width"
+      />
+      @if (form.controls.name.invalid && form.controls.name.touched) {
+        <small class="field-error">
+          @if (form.controls.name.hasError('required')) {
+            Name is required.
+          } @else {
+            Name must be at most 50 characters.
+          }
+        </small>
+      }
+    </div>
+
+    <div class="field">
+      <label for="category-type">Type</label>
+      <p-select
+        inputId="category-type"
+        formControlName="type"
+        [options]="typeOptions"
+        optionLabel="label"
+        optionValue="value"
+        class="full-width"
+      />
+    </div>
+
+    <div class="dialog-actions">
+      <p-button label="Cancel" type="button" [text]="true" severity="secondary" [disabled]="saving()" (onClick)="onCancel()" />
+      <p-button label="Save" type="submit" [loading]="saving()" />
+    </div>
+  </form>
+</p-dialog>

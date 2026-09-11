@@ -1,0 +1,33 @@
+.category-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  label {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--p-text-color);
+  }
+}
+
+.field-error {
+  color: var(--p-red-500);
+  font-size: 0.8rem;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+::ng-deep .full-width {
+  width: 100%;
+}

@@ -1,0 +1,65 @@
+<div class="auth-page">
+  <p-card class="auth-card">
+    <p-header>
+      <div class="auth-header">
+        <h1>Welcome back</h1>
+        <p>Sign in to continue to ExpenseTracker</p>
+      </div>
+    </p-header>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+      @if (errorMessage(); as message) {
+        <p-message severity="error" styleClass="full-width">{{ message }}</p-message>
+      }
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input
+          pInputText
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="you@example.com"
+          class="full-width"
+          autocomplete="email"
+        />
+        @if (form.controls.email.invalid && form.controls.email.touched) {
+          <small class="field-error">
+            @if (form.controls.email.hasError('required')) {
+              Email is required.
+            } @else {
+              Enter a valid email address.
+            }
+          </small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <p-password
+          inputId="password"
+          formControlName="password"
+          [feedback]="false"
+          [toggleMask]="true"
+          class="full-width"
+          inputStyleClass="full-width"
+          autocomplete="current-password"
+        />
+        @if (form.controls.password.invalid && form.controls.password.touched) {
+          <small class="field-error">Password is required.</small>
+        }
+      </div>
+
+      <p-button
+        type="submit"
+        label="Sign in"
+        styleClass="full-width"
+        [loading]="loading()"
+      />
+    </form>
+
+    <p class="auth-footer">
+      Don't have an account? <a routerLink="/register">Register</a>
+    </p>
+  </p-card>
+</div>

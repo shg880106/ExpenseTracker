@@ -1,0 +1,17 @@
+<p-toolbar styleClass="app-toolbar">
+  <div class="p-toolbar-group-start nav">
+    <span class="brand">ExpenseTracker</span>
+    <a routerLink="/dashboard" routerLinkActive="active-link">Dashboard</a>
+    <a routerLink="/categories" routerLinkActive="active-link">Categories</a>
+  </div>
+  <div class="p-toolbar-group-end user">
+    @if (currentUser(); as user) {
+      <span class="user-name">{{ user.name }}</span>
+    }
+    <p-button label="Log out" icon="pi pi-sign-out" [text]="true" severity="secondary" (onClick)="logout()" />
+  </div>
+</p-toolbar>
+
+<main class="app-content">
+  <router-outlet />
+</main>

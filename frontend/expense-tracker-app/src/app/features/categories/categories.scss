@@ -26,6 +26,17 @@
   text-align: right;
 }
 
+.checkbox-column {
+  width: 3rem;
+}
+
+.setup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
 .empty-message {
   text-align: center;
   color: var(--p-text-muted-color);

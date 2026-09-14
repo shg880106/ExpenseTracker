@@ -4,6 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { ConfirmationService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { forkJoin } from 'rxjs';
 
 import {
   Category,
@@ -11,7 +12,9 @@ import {
   getCategoryTypeLabel,
   getCategoryTypeSeverity
 } from '../../core/models/category.model';
+import { DefaultCategory } from '../../core/models/default_category.model';
 import { CategoryService } from '../../core/services/category.service';
+import { DefaultCategoryService } from '../../core/services/default_category.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { CategoryForm } from './category-form/category-form';
 
@@ -23,6 +26,7 @@ import { CategoryForm } from './category-form/category-form';
 })
 export class Categories implements OnInit {
   private readonly categoryService = inject(CategoryService);
+  private readonly defaultCategoryService = inject(DefaultCategoryService);
   private readonly notificationService = inject(NotificationService);
   private readonly confirmationService = inject(ConfirmationService);
 
@@ -31,6 +35,12 @@ export class Categories implements OnInit {
   readonly saving = signal(false);
   readonly dialogVisible = signal(false);
   readonly selectedCategory = signal<Category | null>(null);
+
+  readonly showDefaultCategorySetup = signal(false);
+  readonly defaultCategories = signal<DefaultCategory[]>([]);
+  readonly selectedDefaultCategories = signal<DefaultCategory[]>([]);
+  readonly loadingDefaults = signal(false);
+  readonly addingDefaults = signal(false);
 
   readonly getCategoryTypeLabel = getCategoryTypeLabel;
   readonly getCategoryTypeSeverity = getCategoryTypeSeverity;
@@ -45,9 +55,61 @@ export class Categories implements OnInit {
       next: (categories) => {
         this.categories.set(categories);
         this.loading.set(false);
+
+        if (categories.length === 0) {
+          this.loadDefaultCategories();
+        } else {
+          this.showDefaultCategorySetup.set(false);
+        }
       },
       error: () => {
         this.loading.set(false);
+        this.notificationService.error('Something went wrong. Please try again.');
+      }
+    });
+  }
+
+  private loadDefaultCategories(): void {
+    this.loadingDefaults.set(true);
+    this.defaultCategoryService.getAll().subscribe({
+      next: (defaultCategories) => {
+        this.defaultCategories.set(defaultCategories);
+        this.selectedDefaultCategories.set([]);
+        this.showDefaultCategorySetup.set(true);
+        this.loadingDefaults.set(false);
+      },
+      error: () => {
+        this.loadingDefaults.set(false);
+        this.showDefaultCategorySetup.set(false);
+        this.notificationService.error('Something went wrong. Please try again.');
+      }
+    });
+  }
+
+  skipDefaultCategorySetup(): void {
+    this.showDefaultCategorySetup.set(false);
+  }
+
+  addSelectedDefaultCategories(): void {
+    const selected = this.selectedDefaultCategories();
+    if (selected.length === 0) {
+      return;
+    }
+
+    this.addingDefaults.set(true);
+    const requests = selected.map((category) =>
+      this.categoryService.create({ name: category.name, type: category.type })
+    );
+
+    forkJoin(requests).subscribe({
+      next: () => {
+        this.addingDefaults.set(false);
+        this.showDefaultCategorySetup.set(false);
+        this.notificationService.success('Categories added successfully.');
+        this.loadCategories();
+      },
+      error: () => {
+        this.addingDefaults.set(false);
         this.notificationService.error('Something went wrong. Please try again.');
       }
     });

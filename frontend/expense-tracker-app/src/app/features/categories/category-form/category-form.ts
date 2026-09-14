@@ -30,15 +30,21 @@ export class CategoryForm {
     type: [TransactionType.Expense, [Validators.required]]
   });
 
+  private wasVisible = false;
+
   constructor() {
     effect(() => {
       const category = this.category();
-      if (this.visible()) {
+      const visible = this.visible();
+
+      // Only reset when the dialog transitions from closed to open, not on every effect re-run.
+      if (visible && !this.wasVisible) {
         this.form.reset({
           name: category?.name ?? '',
           type: category?.type ?? TransactionType.Expense
         });
       }
+      this.wasVisible = visible;
     });
   }
 

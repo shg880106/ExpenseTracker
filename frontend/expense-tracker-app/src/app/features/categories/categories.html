@@ -1,46 +1,99 @@
-<div class="page-header">
-  <div>
-    <h1>Categories</h1>
-    <p>Organize your income and expenses into categories.</p>
+@if (showDefaultCategorySetup()) {
+  <div class="page-header">
+    <div>
+      <h1>Welcome! Let's set up your categories</h1>
+      <p>Select the categories you'd like to add to your account, or skip to create your own.</p>
+    </div>
   </div>
-  <p-button label="New Category" icon="pi pi-plus" (onClick)="openCreateDialog()" />
-</div>
 
-<p-table
-  [value]="categories()"
-  [loading]="loading()"
-  dataKey="id"
-  styleClass="categories-table"
-  [paginator]="categories().length > 10"
-  [rows]="10"
->
-  <ng-template #header>
-    <tr>
-      <th>Name</th>
-      <th>Type</th>
-      <th class="actions-column">Actions</th>
-    </tr>
-  </ng-template>
+  <p-table
+    [value]="defaultCategories()"
+    [(selection)]="selectedDefaultCategories"
+    [loading]="loadingDefaults()"
+    dataKey="id"
+    selectionMode="multiple"
+    styleClass="categories-table"
+  >
+    <ng-template #header>
+      <tr>
+        <th class="checkbox-column"><p-tableHeaderCheckbox /></th>
+        <th>Name</th>
+        <th>Type</th>
+      </tr>
+    </ng-template>
 
-  <ng-template #body let-category>
-    <tr>
-      <td>{{ category.name }}</td>
-      <td>
-        <p-tag [value]="getCategoryTypeLabel(category.type)" [severity]="getCategoryTypeSeverity(category.type)" />
-      </td>
-      <td class="actions-column">
-        <p-button icon="pi pi-pencil" [text]="true" severity="secondary" (onClick)="openEditDialog(category)" ariaLabel="Edit category" />
-        <p-button icon="pi pi-trash" [text]="true" severity="danger" (onClick)="confirmDelete(category)" ariaLabel="Delete category" />
-      </td>
-    </tr>
-  </ng-template>
+    <ng-template #body let-category>
+      <tr>
+        <td class="checkbox-column"><p-tableCheckbox [value]="category" /></td>
+        <td>{{ category.name }}</td>
+        <td>
+          <p-tag [value]="getCategoryTypeLabel(category.type)" [severity]="getCategoryTypeSeverity(category.type)" />
+        </td>
+      </tr>
+    </ng-template>
 
-  <ng-template #emptymessage>
-    <tr>
-      <td colspan="3" class="empty-message">No categories yet. Create your first one to get started.</td>
-    </tr>
-  </ng-template>
-</p-table>
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="3" class="empty-message">No default categories available.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <div class="setup-actions">
+    <p-button label="Skip" [text]="true" severity="secondary" [disabled]="addingDefaults()" (onClick)="skipDefaultCategorySetup()" />
+    <p-button
+      label="Add Selected"
+      icon="pi pi-check"
+      [loading]="addingDefaults()"
+      [disabled]="selectedDefaultCategories().length === 0"
+      (onClick)="addSelectedDefaultCategories()"
+    />
+  </div>
+} @else {
+  <div class="page-header">
+    <div>
+      <h1>Categories</h1>
+      <p>Organize your income and expenses into categories.</p>
+    </div>
+    <p-button label="New Category" icon="pi pi-plus" (onClick)="openCreateDialog()" />
+  </div>
+
+  <p-table
+    [value]="categories()"
+    [loading]="loading()"
+    dataKey="id"
+    styleClass="categories-table"
+    [paginator]="categories().length > 10"
+    [rows]="10"
+  >
+    <ng-template #header>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th class="actions-column">Actions</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-category>
+      <tr>
+        <td>{{ category.name }}</td>
+        <td>
+          <p-tag [value]="getCategoryTypeLabel(category.type)" [severity]="getCategoryTypeSeverity(category.type)" />
+        </td>
+        <td class="actions-column">
+          <p-button icon="pi pi-pencil" [text]="true" severity="secondary" (onClick)="openEditDialog(category)" ariaLabel="Edit category" />
+          <p-button icon="pi pi-trash" [text]="true" severity="danger" (onClick)="confirmDelete(category)" ariaLabel="Delete category" />
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="3" class="empty-message">No categories yet. Create your first one to get started.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+}
 
 <app-category-form
   [visible]="dialogVisible()"

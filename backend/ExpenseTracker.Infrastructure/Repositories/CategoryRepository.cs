@@ -15,6 +15,6 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
 
     public async Task<IEnumerable<Category>> GetByUserIdAsync(int userId)
     {
-        return await _dbSet.Where(c => c.UserId == userId).ToListAsync();
+        return await _dbSet.Where(c => c.UserId == userId).OrderBy(c => c.Type).ToListAsync();
     }
 }

@@ -13,6 +13,11 @@ public class TransactionRepository : Repository<Transaction>, ITransactionReposi
 {
     public TransactionRepository(AppDbContext context) : base(context) { }
 
+    public async Task<Transaction?> GetByIdAsync(int id) =>
+        await _dbSet
+            .Include(t => t.Category)
+            .FirstOrDefaultAsync(t => t.Id == id);
+
     public async Task<IEnumerable<Transaction>> GetByUserIdAsync(
         int userId,
         DateTime? fromDate = null,

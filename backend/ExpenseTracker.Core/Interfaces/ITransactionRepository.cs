@@ -14,4 +14,6 @@ public interface ITransactionRepository : IRepository<Transaction>
         DateTime? toDate = null,
         int? categoryId = null,
         TransactionType? type = null);
+
+    new Task<Transaction?> GetByIdAsync(int id);
 }

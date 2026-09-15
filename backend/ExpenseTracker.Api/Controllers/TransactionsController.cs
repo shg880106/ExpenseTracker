@@ -65,6 +65,25 @@ public class TransactionsController : ControllerBase
         });
     }
 
+    [HttpGet("mine")]
+    public async Task<ActionResult<IEnumerable<TransactionDto>>> GetMine()
+    {
+        var transactions = await _transactionRepository.GetByUserIdAsync(CurrentUserId);
+
+        var dtos = transactions.Select(t => new TransactionDto
+        {
+            Id = t.Id,
+            Amount = t.Amount,
+            Date = t.Date,
+            Description = t.Description,
+            Type = t.Type,
+            CategoryId = t.CategoryId,
+            CategoryName = t.Category.Name
+        });
+
+        return Ok(dtos);
+    }
+
     [HttpPost]
     public async Task<ActionResult<TransactionDto>> Create(CreateTransactionDto dto)
     {

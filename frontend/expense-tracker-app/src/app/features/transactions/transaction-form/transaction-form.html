@@ -1,0 +1,82 @@
+<p-dialog
+  [visible]="visible()"
+  (visibleChange)="onVisibleChange($event)"
+  [modal]="true"
+  [header]="isEditMode ? 'Edit Transaction' : 'New Transaction'"
+  [style]="{ width: '28rem' }"
+  [closable]="!saving()"
+  [dismissableMask]="!saving()"
+>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="transaction-form">
+    <div class="field">
+      <label for="transaction-type">Type</label>
+      <p-select
+        inputId="transaction-type"
+        formControlName="type"
+        [options]="typeOptions"
+        optionLabel="label"
+        optionValue="value"
+        appendTo="body"
+        class="full-width"
+      />
+    </div>
+
+    <div class="field">
+      <label for="transaction-category">Category</label>
+      <p-select
+        inputId="transaction-category"
+        formControlName="categoryId"
+        [options]="categoryOptions()"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Select a category"
+        appendTo="body"
+        class="full-width"
+      />
+      @if (form.controls.categoryId.invalid && form.controls.categoryId.touched) {
+        <small class="field-error">Category is required.</small>
+      }
+    </div>
+
+    <div class="field">
+      <label for="transaction-amount">Amount (€)</label>
+      <p-inputnumber
+        inputId="transaction-amount"
+        formControlName="amount"
+        mode="decimal"
+        [minFractionDigits]="2"
+        [maxFractionDigits]="2"
+        [min]="0"
+        class="full-width"
+      />
+      @if (form.controls.amount.invalid && form.controls.amount.touched) {
+        <small class="field-error">Amount must be greater than 0.</small>
+      }
+    </div>
+
+    <div class="field">
+      <label for="transaction-date">Date</label>
+      <p-datepicker inputId="transaction-date" formControlName="date" dateFormat="dd/mm/yy" appendTo="body" class="full-width" />
+    </div>
+
+    <div class="field">
+      <label for="transaction-description">Description</label>
+      <textarea
+        pTextarea
+        id="transaction-description"
+        formControlName="description"
+        placeholder="Optional notes"
+        rows="3"
+        class="full-width"
+      ></textarea>
+      @if (form.controls.description.invalid && form.controls.description.touched) {
+        <small class="field-error">Description must be at most 200 characters.</small>
+      }
+    </div>
+
+    <div class="dialog-actions">
+      <p-button label="Cancel" type="button" [text]="true" severity="secondary" [disabled]="saving()" (onClick)="onCancel()" />
+      <p-button label="Save" type="submit" [loading]="saving()" />
+    </div>
+  </form>
+</p-dialog>

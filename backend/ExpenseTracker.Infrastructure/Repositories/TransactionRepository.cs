@@ -41,6 +41,6 @@ public class TransactionRepository : Repository<Transaction>, ITransactionReposi
         if (type.HasValue)
             query = query.Where(t => t.Type == type.Value);
 
-        return await query.OrderByDescending(t => t.Date).ToListAsync();
+        return await query.OrderBy(t => t.Date).ToListAsync();
     }
 }
